@@ -1,22 +1,25 @@
 import 'dart:convert';
 
-class Resp {
-  final List<Search> search;
-  final String totalResults;
-  final String response;
+import 'package:first_flutter/data/model/BaseResp.dart';
 
-  Resp({this.search = const [], this.totalResults = "", this.response = ""});
+class SearchResp extends BaseResp {
+  final List<Search>? search;
+  final String? totalResults;
 
-  factory Resp.fromJson(Map<String, dynamic> jsons) {
+  SearchResp({String? response, String? error, this.search, this.totalResults});
+
+  factory SearchResp.fromJson(Map<String, dynamic> jsons) {
     List<Search> searchList =
         jsons['Search'].map<Search>((item) => Search.fromJson(item)).toList();
 
     //List<Search> searchList = list.map((i) => Search.fromJson(i)).toList as List<Search>;
     //List<Search> searchList = json['Search'].map<Search>((i) => Search.fromJson(i)).toList;
-    return Resp(
+    return SearchResp(
+        response: jsons['Response'],
+        error: jsons['Error'],
         search: searchList,
         totalResults: jsons['totalResults'],
-        response: jsons['Response']);
+        );
   }
 
   @override

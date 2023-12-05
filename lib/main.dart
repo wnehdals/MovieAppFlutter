@@ -1,38 +1,50 @@
-import 'dart:ffi';
-
-import 'package:first_flutter/present/favorite_fragment.dart';
-import 'package:first_flutter/present/list_fragment.dart';
-import 'package:first_flutter/present/provider/provider.dart';
+import 'package:first_flutter/present/provider/router_provider.dart';
+import 'package:first_flutter/present/res/colors.dart';
+import 'package:first_flutter/present/utils/state_logger.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'value.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 
-void main() {
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider<BottomNavProvider>(
-          create: (context) => BottomNavProvider()),
-      ChangeNotifierProvider<ListFragmentProvider>(
-          create: (context) => ListFragmentProvider())
-    ],
-    child: const MyApp(),
-  ));
+var logger = Logger(
+  printer: PrettyPrinter()
+);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const ProviderScope(
+      observers: [StateLogger()],
+        child: MyApp()
+    )
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
+        routerConfig: router,
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          colorScheme: const ColorScheme(
+              primary: ContextColors.black,
+              onPrimary: ContextColors.white,
+              secondary: ContextColors.blue400,
+              onSecondary: ContextColors.blue50,
+              error: ContextColors.red400,
+              onError: ContextColors.red50,
+              background: ContextColors.white,
+              onBackground: ContextColors.gray50,
+              surface: ContextColors.white,
+              onSurface: ContextColors.black,
+              brightness: Brightness.light),
+          useMaterial3: true,
         ),
-        home: const Scaffold(
-          body: MyHomePage(title: 'Flutter Demo Home Page'),
-        ));
+    );
   }
 }
 
@@ -68,7 +80,7 @@ class FlutterRecyclerView extends StatelessWidget {
 }
 
  */
-
+/*
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -113,3 +125,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 }
+
+ */
